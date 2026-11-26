@@ -509,10 +509,13 @@ class SmartAgent(CaptureAgent):
         return self.safe_fallback(game_state, ghosts)
 
     def carry_limit(self, food):
-        # How many dots we carry before going back. Carrying more is
-        # risky because dying drops all of it, so we keep the number small,
-        # and even smaller when there's not much food left anyway.
-        return max(2, min(6, len(food) // 4))
+        # How many dots we carry before going back. Carrying more is risky
+        # because dying drops all of it, but every trip home also wastes
+        # moves. We tried several limits in hundreds of test games and this
+        # one won the most: up to half of the food that is left (at least 3,
+        # at most 15). The attacker already runs home as soon as a ghost gets
+        # close, so carrying more rarely means losing it.
+        return max(3, min(15, len(food) // 2))
 
     # ---------- defending ----------
 
